@@ -1,42 +1,38 @@
-# Tools
 IVERILOG = iverilog
 VVP      = vvp
 GTKWAVE  = gtkwave
-
-# Directories and Files
 BUILD_DIR = build
-TB_DIR    = tb
-RTL_SRCS  = $(wildcard *.v)
-TB_SRCS   = $(wildcard $(TB_DIR)/*.v)
-SIM_BIN   = $(BUILD_DIR)/sim.out
-VCD_FILE  = $(BUILD_DIR)/alu_waveform.vcd
+TB_DIR   = tb
+IFLAGS   = -I .
 
-.PHONY: all run clean
+.PHONY: all alu regfile imm clean
 
-# Default target
-all: run
+all: alu regfile imm
 
-run:
-	@echo "===> Creating temporary build directory..."
+$(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
 
-	@echo "===> Compiling all source and testbench files..."
-	@$(IVERILOG) -I . -o $(SIM_BIN) $(TB_SRCS) $(RTL_SRCS)
 
-	@echo "===> Running simulation..."
-	@cd $(BUILD_DIR) && $(VVP) sim.out
+alu: $(BUILD_DIR)
+	@echo "===> Simulating ALU..."
+	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/alu_sim $(TB_DIR)/tb_alu.v alu64.v
+	@cd $(BUILD_DIR) && $(VVP) alu_sim
+	@$(GTKWAVE) $(BUILD_DIR)/alu_waveform.vcd &
+	
 
-	@echo "===> Launching GTKWave (close GTKWave window to continue)..."
-	@if [ -f $(VCD_FILE) ]; then \
-		$(GTKWAVE) $(VCD_FILE); \
-	else \
-		echo "Warning: $(VCD_FILE) not found."; \
-	fi
+regfile: $(BUILD_DIR)
+	@echo "===> Simulating Regfile..."
+	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/regfile_sim $(TB_DIR)/tb_regfile.v regfile.v
+	@cd $(BUILD_DIR) && $(VVP) regfile_sim
+	@$(GTKWAVE) $(BUILD_DIR)/regfile_waveform.vcd &
+	
 
-	@echo "===> Removing build directory and temporary files..."
-	@rm -rf $(BUILD_DIR)
-	@echo "===> Done!"
+imm: $(BUILD_DIR)
+	@echo "===> Simulating Immediate Generator..."
+	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/imm_sim $(TB_DIR)/tb_imm_gen.v imm_gen.v
+	@cd $(BUILD_DIR) && $(VVP) imm_sim
+	@$(GTKWAVE) $(BUILD_DIR)/imm_gen_waveform.vcd &
+	
 
-# Manual clean target if needed
 clean:
-	@rm -rf $(BUILD_DIR) *.vcd *.out
+	@rm -rf $(BUILD_DIR) *.vcd
