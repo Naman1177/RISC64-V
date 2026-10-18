@@ -7,7 +7,7 @@ IFLAGS   = -I .
 
 .PHONY: all alu regfile imm clean
 
-all: alu regfile imm
+all: alu regfile imm instruction_mem
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
@@ -32,7 +32,13 @@ imm: $(BUILD_DIR)
 	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/imm_sim $(TB_DIR)/tb_imm_gen.v imm_gen.v
 	@cd $(BUILD_DIR) && $(VVP) imm_sim
 	@$(GTKWAVE) $(BUILD_DIR)/imm_gen_waveform.vcd &
-	
+
+instruction_mem: $(BUILD_DIR)
+	@echo "===> Simulating Instruction Memory..."
+	@cp program.hex $(BUILD_DIR)/
+	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/instruction_mem_sim $(TB_DIR)/tb_instruction_mem.v instruction_mem.v
+	@cd $(BUILD_DIR) && $(VVP) instruction_mem_sim
+	@$(GTKWAVE) $(BUILD_DIR)/instruction_mem_waveform.vcd &
 
 clean:
 	@rm -rf $(BUILD_DIR) *.vcd

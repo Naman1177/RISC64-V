@@ -1,0 +1,31 @@
+00500093    // addi x1, x0, 5        ; x1 = 5
+00a00113    // addi x2, x0, 10       ; x2 = 10
+002081b3    // add  x3, x1, x2       ; x3 = 15
+40110233    // sub  x4, x2, x1       ; x4 = 5
+0041f2b3    // and  x5, x3, x4       ; x5 = x3 & x4 = 5
+0020e333    // or   x6, x1, x2       ; x6 = x1 | x2 = 15
+0011c3b3    // xor  x7, x3, x1       ; x7 = x3 ^ x1 = 10
+00209413    // slli x8, x1, 2        ; x8 = 5 << 2 = 20
+00145493    // srli x9, x8, 1        ; x9 = 20 >> 1 = 10
+0020a513    // slti x10, x1, 2       ; x10 = (5 < 2) = 0
+00a0a593    // slti x11, x1, 10      ; x11 = (5 < 10) = 1
+0020b633    // sltu x12, x1, x2      ; x12 = (5 < 10 unsigned) = 1
+fff00693    // addi x13, x0, -1      ; x13 = -1 (all 1s)
+4016d713    // srai x14, x13, 2      ; x14 = -1 >> 2 (arithmetic shift, remains -1)
+0006f793    // andi x15, x13, 0      ; x15 = -1 & 0 = 0
+00f0e813    // ori  x16, x0, 15      ; x16 = 0 | 15 = 15
+0ff84893    // xori x17, x16, 255    ; x17 = 15 ^ 255 = 240
+00000913    // addi x18, x0, 0       ; x18 = loop counter initialized to 0
+00400993    // addi x19, x0, 4       ; x19 = loop boundary limit = 4
+00190913    // addi x18, x18, 1      ; <loop>: x18++
+01391463    // bne  x18, x19, 8      ; if x18 != x19 jump forward to PC+8 (continue loop)
+0080006f    // jal  x0, 8            ; else break out to PC+8 (skip back-jump)
+ff5ff06f    // jal  x0, -12          ; jump back to <loop> (offset -12)
+00100a13    // addi x20, x0, 1       ; <exit>: x20 = 1 (marks loop completed)
+001a0a93    // addi x21, x20, 1      ; x21 = 2
+015a0463    // beq  x20, x21, 8      ; if 1 == 2 jump forward (should NOT branch)
+00100b13    // addi x22, x0, 99      ; x22 = 99 (verifies false branch not taken)
+015a4463    // blt  x20, x21, 8      ; if 1 < 2 jump forward to PC+8 (should branch)
+00000b93    // addi x23, x0, 0       ; x23 = 0 (skipped if BLT works)
+02a00c13    // addi x24, x0, 42      ; <target>: x24 = 42 (success checkpoint)
+0000006f    // jal  x0, 0            ; <halt>: infinite trap
