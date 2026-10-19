@@ -7,7 +7,7 @@ IFLAGS   = -I .
 
 .PHONY: all alu regfile imm clean
 
-all: alu regfile imm instruction_mem
+all: alu regfile imm instruction_mem control_unit
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
@@ -39,6 +39,12 @@ instruction_mem: $(BUILD_DIR)
 	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/instruction_mem_sim $(TB_DIR)/tb_instruction_mem.v instruction_mem.v
 	@cd $(BUILD_DIR) && $(VVP) instruction_mem_sim
 	@$(GTKWAVE) $(BUILD_DIR)/instruction_mem_waveform.vcd &
+
+control_unit: $(BUILD_DIR)
+	@echo "===> Simulating Control Unit..."
+	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/control_unit_sim $(TB_DIR)/tb_control_unit.v control_unit.v
+	@cd $(BUILD_DIR) && $(VVP) control_unit_sim
+	@$(GTKWAVE) $(BUILD_DIR)/control_unit_waveform.vcd &
 
 clean:
 	@rm -rf $(BUILD_DIR) *.vcd

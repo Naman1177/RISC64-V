@@ -5,4 +5,6 @@ heyy
 ```make all```<br>
 ```make alu```<br>
 ```make regfile```<br>
-```make imm```
+```make imm```<br>
+```make control_unit```<br>
+```make instruction_mem```<br>
