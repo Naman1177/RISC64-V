@@ -8,3 +8,4 @@ heyy
 ```make imm```<br>
 ```make control_unit```<br>
 ```make instruction_mem```<br>
+```make data_mem```<br>
