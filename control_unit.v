@@ -14,7 +14,8 @@ module control_unit(
     output reg alu_src_b, //0-rs2, 1- immediate
     output reg [4:0] alu_ctrl, //5 bit code for alu operation defined in opcode.v
     output reg illegal_instr, //illegal instruction
-    output reg is_w_operation //tells if w or not
+    output reg is_w_operation, //tells if w or not
+    output reg [2:0] branch_ctrl
 );
     
     
@@ -37,6 +38,7 @@ module control_unit(
         alu_ctrl = `ALU_ADD; 
         illegal_instr = 0;
         is_w_operation = 0;
+        branch_ctrl = 3'b000;
 
         case(opcode)
             `OP_R: begin
@@ -109,9 +111,22 @@ module control_unit(
                 mem_write   = 1'b1;
             end
             `OP_BRANCH: begin
-                branch      = 1'b1;
-                alu_src_b   = 1'b0;     
-                alu_ctrl = `ALU_SUB; 
+                branch      = 1'b1;    
+                reg_write   = 1'b0;    
+                mem_read    = 1'b0;     
+                mem_write   = 1'b0;     
+                alu_ctrl    = `ALU_ADD; 
+                alu_src_a   = 1'b0;
+                alu_src_b   = 1'b0;
+                case (funct3)
+                    3'b000: branch_ctrl = `BR_BEQ;
+                    3'b001: branch_ctrl = `BR_BNE;
+                    3'b100: branch_ctrl = `BR_BLT;
+                    3'b101: branch_ctrl = `BR_BGE;
+                    3'b110: branch_ctrl = `BR_BLTU;
+                    3'b111: branch_ctrl = `BR_BGEU;
+                    default: branch_ctrl = 3'b000;
+                endcase
             end
             `OP_JAL: begin
                 jump        = 1'b1;

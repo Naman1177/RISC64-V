@@ -34,6 +34,13 @@
 `define OP_SYSTEM  7'b1110011 
 
 
+`define BR_BEQ   3'b000
+`define BR_BNE   3'b001
+`define BR_BLT   3'b100
+`define BR_BGE   3'b101
+`define BR_BLTU  3'b110
+`define BR_BGEU  3'b111
+
 
 
 
