@@ -52,5 +52,12 @@ data_mem: $(BUILD_DIR)
 	@cd $(BUILD_DIR) && $(VVP) data_mem_sim
 	@$(GTKWAVE) $(BUILD_DIR)/data_mem_waveform.vcd &
 
+cpu: $(BUILD_DIR)
+	@echo "===> Simulating CPU..."
+	@cp program.hex $(BUILD_DIR)/
+	@$(IVERILOG) $(IFLAGS) -o $(BUILD_DIR)/cpu_sim $(TB_DIR)/tb_riscv_core.v riscv_core.v instruction_mem.v data_mem.v control_unit.v regfile.v alu64.v imm_gen.v PC.v comparator.v
+	@cd $(BUILD_DIR) && $(VVP) cpu_sim
+	@$(GTKWAVE) $(BUILD_DIR)/cpu_waveform.vcd &
+
 clean:
 	@rm -rf $(BUILD_DIR) *.vcd

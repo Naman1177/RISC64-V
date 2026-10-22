@@ -15,7 +15,8 @@ module control_unit(
     output reg [4:0] alu_ctrl, //5 bit code for alu operation defined in opcode.v
     output reg illegal_instr, //illegal instruction
     output reg is_w_operation, //tells if w or not
-    output reg [2:0] branch_ctrl
+    output reg [2:0] branch_ctrl,
+    output reg [2:0] funct3out //for branch comparator
 );
     
     
@@ -26,6 +27,7 @@ module control_unit(
     
     always @(*) begin
         // default
+        funct3out = funct3;
         reg_write = 0;
         mem_to_reg = 2'b00;
         mem_read = 0;
@@ -115,9 +117,7 @@ module control_unit(
                 reg_write   = 1'b0;    
                 mem_read    = 1'b0;     
                 mem_write   = 1'b0;     
-                alu_ctrl    = `ALU_ADD; 
-                alu_src_a   = 1'b0;
-                alu_src_b   = 1'b0;
+                alu_ctrl    = `ALU_ADD;
                 case (funct3)
                     3'b000: branch_ctrl = `BR_BEQ;
                     3'b001: branch_ctrl = `BR_BNE;

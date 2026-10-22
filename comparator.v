@@ -5,6 +5,7 @@ module branch_comparator(
     input wire [63:0] b,
     input wire [2:0] branch_ctrl, //come from control unit of branch_ctrl
     output reg branch_taken
+    
 );
     always @(*) begin
         case (branch_ctrl)

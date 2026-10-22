@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module data_mem #(
-    parameter MEM_SIZE = 16384 //16kb
+    parameter MEM_SIZE = 65536  // 64 KB Data Memory
 )(
     input  wire        clk,
     input  wire        mem_read,

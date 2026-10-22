@@ -5,10 +5,10 @@ module PC #(
     input wire reset,
     input wire pc_write_en,
     input wire [63:0] pc_next,
-    output reg [63:0] pc_current
+    output reg [63:0] pc_current,
     output wire pc_misaligned
 );
-    assign pc_misaligned = pc_write_en && (pc_next[1:0] != 2'b00);
+    assign pc_misaligned = (pc_next[1:0] != 2'b00);
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             pc_current <= RESET_ADDR;

@@ -13,8 +13,8 @@ module regfile(
     reg [63:0] regs[31:0]; 
     integer i;
 
-    assign rs1_data = (rs1_addr == 5'd0) ? 64'd0 : (write_en && (rd_addr == rs1_addr)) ? rd_data : regs[rs1_addr];
-    assign rs2_data = (rs2_addr == 5'd0) ? 64'd0 : (write_en && (rd_addr == rs2_addr)) ? rd_data : regs[rs2_addr];
+    assign rs1_data = (rs1_addr == 5'd0) ? 64'd0 : regs[rs1_addr];
+    assign rs2_data = (rs2_addr == 5'd0) ? 64'd0 : regs[rs2_addr];
     
     always @(posedge clk or posedge reset) begin
 

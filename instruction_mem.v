@@ -1,11 +1,11 @@
 module instruction_mem #(
-    parameter MEM_DEPTH = 65536 //256kb can be incresed
+    parameter MEM_DEPTH = 2048  // Number of 32-bit words in instruction memory 
 )
 (
     input  wire [63:0] addr,      
     output wire [31:0] instruction
 );
-    localparam ADDR_BITS = $clog2(MEM_DEPTH); //here aadr_bits is 16 
+    localparam ADDR_BITS = $clog2(MEM_DEPTH);
     reg [31:0] mem [0:MEM_DEPTH-1];
     wire [ADDR_BITS-1:0] word_idx = addr[ADDR_BITS+1 : 2];
 
